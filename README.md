@@ -1,7 +1,8 @@
 # Dental Excellence
 
 A modern, interactive website for a dental clinic featuring appointment booking, service information, and an admin dashboard.
-
+Admin: https://dentalexcell.netlify.app/admin-login.html
+Patient: https://dentalexcell.netlify.app
 ## Features
 
 - **Modern UI Design** - Responsive layout with engaging animations and smooth scrolling
