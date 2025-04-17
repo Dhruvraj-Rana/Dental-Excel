@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Dental Excellence</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        :root {
+            --primary-color: #5a6acf;
+            --primary-light: #7b88d9;
+            --primary-dark: #4a5ab8;
+            --secondary-color: #38b2ac;
+            --danger-color: #e53e3e;
+            --success-color: #38a169;
+            --warning-color: #d69e2e;
+            --text-color: #2d3748;
+            --text-light: #718096;
+            --background-color: #f7fafc;
+            --white: #ffffff;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-logo i {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        .sidebar-logo span {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(90, 106, 207, 0.1);
+        }
+
+        .nav-item.active {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .nav-item i {
+            width: 24px;
+        }
+
+        /* Main content */
+        .main-content {
+            padding: 1.5rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background-color: var(--white);
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-card h3 {
+            color: var(--text-light);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .trend {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .trend.up {
+            color: var(--success-color);
+        }
+
+        .trend.down {
+            color: var(--danger-color);
+        }
+
+        /* Table styles */
+        .content-card {
+            background-color: var(--white);
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow);
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .appointments-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .appointments-table th,
+        .appointments-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+        }
+
+        .appointments-table th {
+            font-weight: 600;
+            color: var(--text-light);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .appointments-table tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.25rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: var(--white);
+        }
+
+        .btn-success:hover {
+            background-color: #2f855a;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background-color: #c53030;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background-color: rgba(214, 158, 46, 0.2);
+            color: var(--warning-color);
+        }
+
+        .status-confirmed {
+            background-color: rgba(56, 161, 105, 0.2);
+            color: var(--success-color);
+        }
+
+        .status-cancelled {
+            background-color: rgba(229, 62, 62, 0.2);
+            color: var(--danger-color);
+        }
+
+        .status-completed {
+            background-color: rgba(90, 106, 207, 0.2);
+            color: var(--primary-color);
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            border-radius: 0.5rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow);
+        }
+
+        .modal-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.25rem;
+            color: var(--text-light);
+        }
+
+        .modal-body {
+            padding: 1.25rem;
+        }
+
+        .modal-footer {
+            padding: 1.25rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.25rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        /* Loader */
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Alert */
+        .alert {
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.25rem;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: rgba(56, 161, 105, 0.2);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+
+        .alert-danger {
+            background-color: rgba(229, 62, 62, 0.2);
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fas fa-tooth"></i>
+                <span>Dental Excellence</span>
+            </div>
+            <div class="sidebar-nav">
+                <div class="nav-item active">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Appointments</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-user-md"></i>
+                    <span>Doctors</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Patients</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Analytics</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="page-header">
+                <h1 class="page-title">Appointments Dashboard</h1>
+                <div class="admin-controls" style="display: flex; align-items: center; gap: 15px;">
+                    <span id="admin-info" style="margin-right: 10px;"></span>
+                    <button class="btn btn-primary" id="btn-refresh">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                    <button class="btn btn-danger" id="btn-logout">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Appointments</h3>
+                    <div class="number" id="total-appointments">0</div>
+                    <div class="trend up">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>5% from last week</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Pending</h3>
+                    <div class="number" id="pending-appointments">0</div>
+                    <div class="trend up">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>12% from last week</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Confirmed</h3>
+                    <div class="number" id="confirmed-appointments">0</div>
+                    <div class="trend up">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>7% from last week</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <h3>Completed</h3>
+                    <div class="number" id="completed-appointments">0</div>
+                    <div class="trend down">
+                        <i class="fas fa-arrow-down"></i>
+                        <span>3% from last week</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <div class="card-header">
+                    <h2 class="card-title">Recent Appointments</h2>
+                </div>
+                
+                <div id="alert" class="alert"></div>
+                <div id="loader" class="loader"></div>
+
+                <table class="appointments-table">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Service</th>
+                            <th>Date & Time</th>
+                            <th>Contact</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="appointments-table-body">
+                        <!-- Appointments will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- View/Edit Appointment Modal -->
+    <div class="modal" id="appointment-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">Appointment Details</h2>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="appointment-form">
+                    <input type="hidden" id="appointment-id">
+                    <div class="form-group">
+                        <label for="fullName">Patient Name</label>
+                        <input type="text" id="fullName" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="tel" id="phone" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="service">Service</label>
+                        <input type="text" id="service" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="text" id="date" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="time">Time</label>
+                        <input type="text" id="time" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Notes</label>
+                        <textarea id="message" class="form-control" readonly rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status" class="form-control">
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btn-delete">Delete</button>
+                <button type="button" class="btn btn-success" id="btn-save">Update Status</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="firebase-config.js"></script>
+    
+    <script>
+        // Initialize Firebase using config from firebase-config.js
+        firebase.initializeApp(window.firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        const appointmentsCollection = db.collection('appointments');
+
+        // Authentication check
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                // Not logged in, redirect to login page
+                console.log("No user logged in, redirecting to login page");
+                window.location.href = 'admin-login.html';
+            } else {
+                // User is logged in, display admin email
+                console.log("User logged in:", user.email);
+                const adminInfo = document.getElementById('admin-info');
+                if (adminInfo) {
+                    adminInfo.textContent = `Logged in as: ${user.email}`;
+                }
+                // Load appointments
+                loadAppointments();
+            }
+        });
+
+        // Add logout functionality
+        const logoutButton = document.getElementById('btn-logout');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', () => {
+                auth.signOut().then(() => {
+                    console.log("User logged out");
+                    window.location.href = 'admin-login.html';
+                }).catch(error => {
+                    console.error('Logout error:', error);
+                    showAlert('Logout failed. Please try again.', 'danger');
+                });
+            });
+        }
+
+        // DOM Elements
+        const appointmentsTableBody = document.getElementById('appointments-table-body');
+        const totalAppointmentsElem = document.getElementById('total-appointments');
+        const pendingAppointmentsElem = document.getElementById('pending-appointments');
+        const confirmedAppointmentsElem = document.getElementById('confirmed-appointments');
+        const completedAppointmentsElem = document.getElementById('completed-appointments');
+        const appointmentModal = document.getElementById('appointment-modal');
+        const modalClose = document.getElementById('modal-close');
+        const appointmentForm = document.getElementById('appointment-form');
+        const appointmentIdInput = document.getElementById('appointment-id');
+        const fullNameInput = document.getElementById('fullName');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+        const serviceInput = document.getElementById('service');
+        const dateInput = document.getElementById('date');
+        const timeInput = document.getElementById('time');
+        const messageInput = document.getElementById('message');
+        const statusInput = document.getElementById('status');
+        const btnSave = document.getElementById('btn-save');
+        const btnDelete = document.getElementById('btn-delete');
+        const btnRefresh = document.getElementById('btn-refresh');
+        const loader = document.getElementById('loader');
+        const alert = document.getElementById('alert');
+
+        // Load appointments
+        async function loadAppointments() {
+            try {
+                showLoader(true);
+                
+                const snapshot = await appointmentsCollection.orderBy('createdAt', 'desc').get();
+                
+                // Clear the table
+                appointmentsTableBody.innerHTML = '';
+                
+                if (snapshot.empty) {
+                    showAlert('No appointments found.', 'danger');
+                    return;
+                }
+                
+                let total = 0;
+                let pending = 0;
+                let confirmed = 0;
+                let completed = 0;
+                
+                snapshot.forEach(doc => {
+                    const appointment = doc.data();
+                    appointment.id = doc.id;
+                    
+                    // Increment counters
+                    total++;
+                    if (appointment.status === 'pending') pending++;
+                    if (appointment.status === 'confirmed') confirmed++;
+                    if (appointment.status === 'completed') completed++;
+                    
+                    // Create table row
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${appointment.fullName || 'N/A'}</td>
+                        <td>${appointment.service || 'N/A'}</td>
+                        <td>${appointment.date} at ${appointment.time}</td>
+                        <td>
+                            ${appointment.phone || 'N/A'}<br>
+                            <small>${appointment.email || 'N/A'}</small>
+                        </td>
+                        <td>
+                            <span class="status-badge status-${appointment.status || 'pending'}">
+                                ${(appointment.status || 'pending').toUpperCase()}
+                            </span>
+                        </td>
+                        <td class="table-actions">
+                            <button class="btn btn-primary btn-view" data-id="${appointment.id}">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    `;
+                    
+                    appointmentsTableBody.appendChild(row);
+                    
+                    // Add event listener to view button
+                    const viewBtn = row.querySelector('.btn-view');
+                    viewBtn.addEventListener('click', () => openAppointmentModal(appointment));
+                });
+                
+                // Update stats
+                totalAppointmentsElem.textContent = total;
+                pendingAppointmentsElem.textContent = pending;
+                confirmedAppointmentsElem.textContent = confirmed;
+                completedAppointmentsElem.textContent = completed;
+                
+            } catch (error) {
+                console.error('Error loading appointments:', error);
+                showAlert('Error loading appointments. Please try again.', 'danger');
+            } finally {
+                showLoader(false);
+            }
+        }
+
+        // Open appointment modal
+        function openAppointmentModal(appointment) {
+            appointmentIdInput.value = appointment.id;
+            fullNameInput.value = appointment.fullName || '';
+            emailInput.value = appointment.email || '';
+            phoneInput.value = appointment.phone || '';
+            serviceInput.value = appointment.service || '';
+            dateInput.value = appointment.date || '';
+            timeInput.value = appointment.time || '';
+            messageInput.value = appointment.message || '';
+            statusInput.value = appointment.status || 'pending';
+            
+            appointmentModal.classList.add('active');
+        }
+
+        // Close appointment modal
+        function closeAppointmentModal() {
+            appointmentModal.classList.remove('active');
+            appointmentForm.reset();
+        }
+
+        // Update appointment status
+        async function updateAppointmentStatus() {
+            try {
+                showLoader(true);
+                
+                const appointmentId = appointmentIdInput.value;
+                const newStatus = statusInput.value;
+                
+                if (!appointmentId) {
+                    showAlert('No appointment selected.', 'danger');
+                    return;
+                }
+                
+                await appointmentsCollection.doc(appointmentId).update({
+                    status: newStatus,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                showAlert('Appointment status updated successfully.', 'success');
+                closeAppointmentModal();
+                loadAppointments();
+                
+            } catch (error) {
+                console.error('Error updating appointment:', error);
+                showAlert('Error updating appointment. Please try again.', 'danger');
+            } finally {
+                showLoader(false);
+            }
+        }
+
+        // Delete appointment
+        async function deleteAppointment() {
+            try {
+                const appointmentId = appointmentIdInput.value;
+                
+                if (!appointmentId) {
+                    showAlert('No appointment selected.', 'danger');
+                    return;
+                }
+                
+                if (!confirm('Are you sure you want to delete this appointment?')) {
+                    return;
+                }
+                
+                showLoader(true);
+                
+                await appointmentsCollection.doc(appointmentId).delete();
+                
+                showAlert('Appointment deleted successfully.', 'success');
+                closeAppointmentModal();
+                loadAppointments();
+                
+            } catch (error) {
+                console.error('Error deleting appointment:', error);
+                showAlert('Error deleting appointment. Please try again.', 'danger');
+            } finally {
+                showLoader(false);
+            }
+        }
+
+        // Show/hide loader
+        function showLoader(show) {
+            loader.style.display = show ? 'block' : 'none';
+        }
+
+        // Show alert
+        function showAlert(message, type) {
+            alert.textContent = message;
+            alert.className = `alert alert-${type}`;
+            alert.style.display = 'block';
+            
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+
+        // Event listeners
+        modalClose.addEventListener('click', closeAppointmentModal);
+        btnSave.addEventListener('click', updateAppointmentStatus);
+        btnDelete.addEventListener('click', deleteAppointment);
+        btnRefresh.addEventListener('click', loadAppointments);
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === appointmentModal) {
+                closeAppointmentModal();
+            }
+        });
+    </script>
+</body>
+</html> 
